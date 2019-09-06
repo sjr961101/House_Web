@@ -54,7 +54,14 @@ var TableInit = function() {
             //     // });
             //     return res;
             // },
+
             columns: [{
+                field: 'state',
+                title: '全选',
+                checkbox: true,
+                align: 'center',
+                valign: 'middle'
+            }, {
                 field: 'community',
                 title: '小区名'
             }, {
@@ -78,6 +85,13 @@ var TableInit = function() {
             }]
         });
     };
+    $table.on('check.bs.table uncheck.bs.table ' +
+        'check-all.bs.table uncheck-all.bs.table',
+        function() {
+            // save your data, here just save the current page
+            selections = getIdSelections();
+            // push or splice the selections if you want to save all data selections
+        });
     // 得到查询的参数
     userTableInit.queryParams = function(params) {
         logPageSize = params.limit;
@@ -93,3 +107,67 @@ var TableInit = function() {
     };
     return userTableInit;
 };
+function getIdSelections() {
+    return $.map($table.bootstrapTable('getSelections'), function(row) {
+        return row.id;
+    });
+}
+
+function responseHandler(res) {
+    $.each(res.rows, function(i, row) {
+        row.state = $.inArray(row.userUuid, selections) !== -1;
+    });
+    return res;
+}
+$("#addInfo").click(function() {
+    $("input[name='community']").val("");
+    $("input[name='location']").val("");
+    $("input[name='owner']").val("");
+    $("input[name='area']").val("");
+    $("input[name='remark']").val("");
+    $(".zxRange option:first").prop("selected", 'selected');
+    $(".zxType option:first").prop("selected", 'selected');
+    $("#modalAddorEditTitle").html("新增专项");
+    $("#modal").modal("show");
+});
+function addOrEdit(){
+    var modalTitle = $("#modalAddorEditTitle").html();
+    var vasd = jQuery.form2json("myForm");
+    console.log(vasd.data);
+    ajaxRequest("POST", "/insert", function(ajaxRet) {
+        if(ajaxRet.count == 1) {
+            $("#modal").modal("hide");
+            layer.alert(ajaxRet.data);
+        }else{
+            $("#tb_users").bootstrapTable('destroy');
+            userTableInit.Init();
+            $("#modal").modal("hide");
+            layer.alert(ajaxRet.data);
+        }
+    },undefined ,vasd.data);
+}
+$("#delThis").click(function() {
+    var idSelections = getIdSelections();
+    console.log("getIdSelections:" + idSelections);
+    if(idSelections == ""){
+        layer.msg('您尚未勾选，请勾选需要进行操作的数据', {
+            icon : 2
+        });
+        return ;
+    }
+    layer.confirm('请是否确定删除所勾选的数据？', {
+        icon: 7,
+        title: '提示'
+    }, function() {
+        layer.closeAll('dialog');
+        ajaxRequest("DELETE", "/specialManagements", function(ajaxRet) {
+            if(ajaxRet.success) {
+                layer.msg(ajaxRet.data, {
+                    icon : 1
+                });
+                $("#tb_users").bootstrapTable('destroy');
+                userTableInit.Init();
+            }
+        }, {"idSelections": idSelections.toString()},undefined);
+    });
+});
