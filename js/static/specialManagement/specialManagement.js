@@ -35,7 +35,7 @@ var TableInit = function() {
             pageSize: 10, // 每页的记录行数（*）
             pageList: [10, 25, 50, 100], // 可供选择的每页的行数（*）
             //			height : 456,
-            uniqueId: "ID", // 每一行的唯一标识，一般为主键列
+            uniqueId: "id", // 每一行的唯一标识，一般为主键列
             search: false, // 是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
             strictSearch: false,
             showColumns: false, // 是否显示所有的列
@@ -45,13 +45,12 @@ var TableInit = function() {
             showToggle: false, // 是否显示详细视图和列表视图的切换按钮
             cardView: false, // 是否显示详细视图
             detailView: false, // 是否显示父子表、
-            // paginationLoop: true,
-            // maintainSelected: true,
+            paginationLoop: true,
+            maintainSelected: true,
             // responseHandler: function(res) { // res 为后台return的值
-            //     alert(res.data.length);
-            //     // $.each(res.data, function(i, row) {
-            //     //     row.state = $.inArray(row.userUuid, selections) !== -1;
-            //     // });
+            //     $.each(res.rows, function(i, row) {
+            //         row.state = $.inArray(row.id, selections) !== -1;
+            //     });
             //     return res;
             // },
 
@@ -61,7 +60,11 @@ var TableInit = function() {
                 checkbox: true,
                 align: 'center',
                 valign: 'middle'
-            }, {
+            },  {
+                field: 'id',
+                visible: false
+            },
+                {
                 field: 'community',
                 title: '小区名'
             }, {
@@ -109,13 +112,14 @@ var TableInit = function() {
 };
 function getIdSelections() {
     return $.map($table.bootstrapTable('getSelections'), function(row) {
+        console.log(row);
         return row.id;
     });
 }
 
 function responseHandler(res) {
     $.each(res.rows, function(i, row) {
-        row.state = $.inArray(row.userUuid, selections) !== -1;
+        row.state = $.inArray(row.id, selections) !== -1;
     });
     return res;
 }
@@ -127,7 +131,7 @@ $("#addInfo").click(function() {
     $("input[name='remark']").val("");
     $(".zxRange option:first").prop("selected", 'selected');
     $(".zxType option:first").prop("selected", 'selected');
-    $("#modalAddorEditTitle").html("新增专项");
+    $("#modalAddorEditTitle").html("新增信息");
     $("#modal").modal("show");
 });
 function addOrEdit(){
@@ -149,25 +153,29 @@ function addOrEdit(){
 $("#delThis").click(function() {
     var idSelections = getIdSelections();
     console.log("getIdSelections:" + idSelections);
+    var vasd ={};
     if(idSelections == ""){
         layer.msg('您尚未勾选，请勾选需要进行操作的数据', {
             icon : 2
         });
         return ;
+    }else{
+        vasd.data= "{\"ids\" :\" "+idSelections.toString() + "\"}";
     }
+    console.log(vasd.data);
     layer.confirm('请是否确定删除所勾选的数据？', {
         icon: 7,
         title: '提示'
     }, function() {
         layer.closeAll('dialog');
-        ajaxRequest("DELETE", "/specialManagements", function(ajaxRet) {
-            if(ajaxRet.success) {
+        ajaxRequest("POST", "/delete", function(ajaxRet) {
+            if(ajaxRet.count != 0) {
                 layer.msg(ajaxRet.data, {
                     icon : 1
                 });
                 $("#tb_users").bootstrapTable('destroy');
                 userTableInit.Init();
             }
-        }, {"idSelections": idSelections.toString()},undefined);
+        }, undefined ,vasd.data);
     });
 });

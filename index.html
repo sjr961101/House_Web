@@ -36,7 +36,11 @@
                 </div>
             </div>
             <div class="col-sm-12"style="margin-top: 15px;text-align: center; margin-left: 60px;">
-                <button class="btn btn-primary btn-add" id="search" type="button" >查询</button>
+                <button class="btn btn-primary btn-add" id="search" type="button" style="margin-left: -200px">查询</button>
+
+                <button class="btn btn-success btn-del" id="addInfo" type="button"  style="margin-left: 50px">新增</button>
+
+                <button class="btn btn-success btn-upd" id="delThis" type="button"  style="margin-left: 50px">删除</button>
             </div>
         </div>
         <table id="tb_users"></table>
@@ -49,56 +53,60 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick="cancer()">&times;</button>
-                <h5 class="modal-title" id="modalAddorEditTitle">新增专项</h5>
+                <h5 class="modal-title" id="modalAddorEditTitle">房屋信息新增</h5>
             </div>
             <div class="modal-body" style="background-color: white;">
                 <div class="ibox-content">
                     <form class="form-horizontal m-t" id="myForm">
-                        <input name="zxUuid" type="text" hidden>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">编号：</label>
+                            <label class="col-sm-3 control-label">小区名：</label>
                             <div class="col-sm-6">
-                                <input name="zxCode" class="form-control" type="text" disabled="disabled">
+                                <input name="community" class="form-control" type="text">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">名称：</label>
+                            <label class="col-sm-3 control-label">户号：</label>
                             <div class="col-sm-6">
-                                <input id="zxName" name="zxName" class="form-control" type="text" aria-required="true" aria-invalid="false" class="valid">
-                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 注意：必填项，且数字字母下划线不超过32位</span>
+                                <input name="location" class="form-control" type="text" >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">范围：</label>
+                            <label class="col-sm-3 control-label">业主：</label>
                             <div class="col-sm-6">
-                                <select class="form-control zxRange" name="zxRange">
-                                    <option value="1">全国</option>
-                                    <option value="2">省/直辖市</option>
-                                    <option value="3">区/旗/市</option>
+                                <input name="owner" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">面积：</label>
+                            <div class="col-sm-6">
+                                <input name="area" class="form-control" type="text" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">居住情况：</label>
+                            <div class="col-sm-6">
+                                <select class="form-control zxRange" name="houseType">
+                                    <option value="0">请选择</option>
+                                    <option value="1">自住</option>
+                                    <option value="2">出租</option>
+                                    <option value="3">空置</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">类型：</label>
+                            <label class="col-sm-3 control-label">装修情况：</label>
                             <div class="col-sm-6">
-                                <select class="form-control zxType" name="zxType">
-                                    <option value="1">事件</option>
-                                    <option value="2">案件</option>
+                                <select class="form-control zxType" name="repair">
+                                    <option value="0">请选择</option>
+                                    <option value="1">毛坯</option>
+                                    <option value="2">已翻建</option>
                                 </select>
                             </div>
                         </div>
-
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">开始时间：</label>
-                            <div class="col-sm-8">
-                                <input class="form-control layer-date" name="startTime" placeholder="YYYY-MM-DD" onclick="laydate({istime: false, format: 'YYYY-MM-DD'})">
-                                <label class="laydate-icon"></label>
-                            </div>
-                            <label class="col-sm-3 control-label">结束时间：<span
-                                    style="color: red"></span></label>
-                            <div class="col-sm-8">
-                                <input class="form-control layer-date" name="endTime" placeholder="YYYY-MM-DD" onclick="laydate({istime: false, format: 'YYYY-MM-DD'})">
-                                <label class="laydate-icon"></label>
+                            <label class="col-sm-3 control-label">备注：</label>
+                            <div class="col-sm-6">
+                                <input name="remark" class="form-control" type="text" >
                             </div>
                         </div>
                     </form>
