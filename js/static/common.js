@@ -1,4 +1,4 @@
-ZEUS_BASE_URL="http://106.52.117.170:80/House";
+﻿ZEUS_BASE_URL="http://106.52.117.170:80/House";
 
 function ajaxRequest(method, url, callback, urlParams, bodyParams) {
 

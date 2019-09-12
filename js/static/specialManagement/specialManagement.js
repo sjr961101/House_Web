@@ -129,6 +129,7 @@ $("#addInfo").click(function() {
     $("input[name='owner']").val("");
     $("input[name='area']").val("");
     $("input[name='remark']").val("");
+    $("input[name='phone']").val("");
     $(".zxRange option:first").prop("selected", 'selected');
     $(".zxType option:first").prop("selected", 'selected');
     $("#modalAddorEditTitle").html("新增信息");
